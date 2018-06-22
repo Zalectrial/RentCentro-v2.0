@@ -3,6 +3,16 @@ session_start();
 include 'Property.php';
 
 $obj=new Property;
+if(isset($_POST["type"]) && isset($_SESSION["email"]))
+{
+	$to = $_SESSION["email"];
+	$subject = "Property Booked !";
+	$txt = "Thank you for booking Property on RentCentro \nBooking Detils: \nCheckin:".$_POST["checkin"]."\nCheckout:".$_POST["checkout"]."\nFor more info visit website\nRegards";
+	$headers = "From: webmaster@rentcentro.com" . "\r\n" ;
+
+	if(!mail($to,$subject,$txt,$headers))
+		echo "mail not sent please upload project on live server";
+}	
 if(isset($_REQUEST["id"]) && $_REQUEST["id"]!="" && $_REQUEST["id"]>0){
 
 	$property=$obj->getProperty($_REQUEST["id"]);
@@ -58,7 +68,7 @@ if(isset($_REQUEST["id"]) && $_REQUEST["id"]!="" && $_REQUEST["id"]>0){
 									
 						<div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" id="table--div">
 							
-							<form action="product_checkout.php" method="post">
+							<form action="" method="post">
 							<table align="center" class="table table-condensed">
 								<tr>
 									<td>
@@ -99,14 +109,14 @@ if(isset($_REQUEST["id"]) && $_REQUEST["id"]!="" && $_REQUEST["id"]>0){
 
 								<tr>
 										<td>
+									<input type="hidden" name="id" value="<?=$property["parking"]?>" >
+									<input type="hidden" name="type" value="book" >
 									<button type="submit" class="btn btn-primary col-sm-12">
 									book
 									</button>
 									<td>
-
 								</tr>
 
-								
 							</table>
 
 								</form>
@@ -120,7 +130,8 @@ if(isset($_REQUEST["id"]) && $_REQUEST["id"]!="" && $_REQUEST["id"]>0){
 
 						</div>
 						<div class="col-md-8 col-md-offset-2">
-							<table class="table table-responsive">
+							<h3> Property Details </h3>
+							<table class="table table-responsive table-bordered">
 								<tr>
 									<td>		
 										Bedrooms
@@ -161,6 +172,60 @@ if(isset($_REQUEST["id"]) && $_REQUEST["id"]!="" && $_REQUEST["id"]>0){
 										<?=$property["parking"]?> 
 									</td>
 								</tr>
+								<tr>
+									<td>		
+										furnished
+									</td>
+									<td>
+										<?= $property["furnished"] == 1 ? "YES" : "NO" ?> 
+									</td>
+								</tr>
+								<tr>
+									<td>		
+										Air-conditioning
+									</td>
+									<td>
+										<?= $property["air_condition"] == 1 ? "YES" : "NO" ?> 
+									</td>
+								</tr>
+								<tr>
+									<td>		
+										Swimming pool
+									</td>
+									<td>
+										<?= $property["swimming_pool"] == 1 ? "YES" : "NO" ?> 
+									</td>
+								</tr>
+								<tr>
+									<td>		
+										Spa
+									</td>
+									<td>
+										<?= $property["spa"] == 1 ? "YES" : "NO" ?> 
+									</td>
+								</tr>
+								<tr>
+									<td>		
+										Energy rating
+									</td>
+									<td>
+										<?= $property["energy"]  ?> 
+									</td>
+								</tr>
+								<tr>
+									<td>		
+										Internet inclusion
+									</td>
+									<td>
+										<?= $property["internet"] == 1 ? "YES" : "NO" ?> 
+									</td>
+								</tr>
+								
+
+
+
+
+
 								
 							</table>
 						</div>

@@ -3,8 +3,7 @@ session_start();
 include 'Property.php';
 
 $obj=new Property;
-//$xml=$obj->getXML();
-
+$msg='';
 if(isset($_POST['email']) && isset($_POST['password'])){
     $email=trim($_POST['email']);
     $pass=trim($_POST['password']);
@@ -13,7 +12,8 @@ if(isset($_POST['email']) && isset($_POST['password'])){
         header("location:./index.php");
         
     }else{
-        exit;
+        $msg="<div class='alert alert-danger'>   <h3> Incorrect email or password !</h3> </div>";
+        
     }
         
 }
@@ -37,7 +37,9 @@ if(isset($_POST['email']) && isset($_POST['password'])){
 		?>
 
 		<div class="row">
+
             <div class="col-md-4 col-md-offset-4">
+                <?=$msg?>
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <h3 class="panel-title">Please sign in</h3>

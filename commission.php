@@ -1,21 +1,29 @@
 <?php
 session_start();
 include 'Property.php';
+if($_SESSION['type']!='admin')
+    header("location:./index.php");
 
 $obj=new Property;
 $msg='';
 
-if(isset($_REQUEST['query']) ){
+if(isset($_REQUEST["id"])){
+    if($obj->updateCommission())
+        $msg="<div class='alert alert-success'>  Commission Updated successfully </div>";
+    else
+        $msg="<div class='alert alert-danger'>  failed to update commission </div>";
+}
+
    
 $results='';
-    if($results=$obj->search()){
-       
-        
-    }else{
-        $msg=$msg="<div class='alert alert-danger'>  No results </div>";
-    }
-        
+if($results=$obj->getAllProperties()){
+    
+    
+}else{
+    $msg="<div class='alert alert-danger'>  No results </div>";
 }
+        
+
 
 ?>
 <!DOCTYPE html>
@@ -47,17 +55,16 @@ $results='';
 			<div class="col-xs-12 col-sm-12" >
 				<?=$msg?>
 				<div id="postDiv">
+                <h2> Commission </h2>
 					<table class="table table-striped table-responsive table-bordered ">
 						<thead>
 							<tr>
 								<td>Image</td>
-								<td>Property</td> 
-								<td>Postcode</td> 
 								<td>City/Suburb</td> 
 								<td>Street Name</td> 
 								<td>Street Number</td> 
 								<td>Price</td> 
-								<td>Bedrooms</td>
+								<td>Commission</td>
 							</tr>
 						</thead>
 					<?php
@@ -70,13 +77,19 @@ $results='';
 								<img class="img img-responsive col-xs-12" src="assets/images/<?=$property["image"]?>" >
 							</a>
 						</td>
-						<td><p> <?=$property["description"]?><p> </td>
-						<td> <?=$property["postcode"]?> </td>
+						
 						<td> <?=$property["city"]?> </td>
 						<td> <?=$property["street_name"]?> </td>
 						<td> <?=$property["street_no"]?> </td>
 						<td>$ <?=$property["book_price"] + (( $property["book_price"] * $property["commission_rate"])/100)?> </td>
-						<td> <?=$property["bedroom"]?> </td>
+						<td>
+                            <form method="post">  
+                            <input type="number" value="<?=$property["commission_rate"]?>" min="0" max="100" name="commission">
+                            <br>
+                            <input type="hidden" name="id"  value=<?=$property["id"]?>>
+                            <button type="submit">Save</button>
+                            </form>
+                        </td>
 					</tr>
 
 					<?php

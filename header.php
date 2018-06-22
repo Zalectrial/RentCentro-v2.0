@@ -21,6 +21,10 @@
     	if(isset($_SESSION['email'])){
     		echo'<li><a href="add_property.php">Add Property</a></li>';
     	}
+    	
+    	if(isset($_SESSION['type']) && $_SESSION['type']=='admin'){
+    		echo'<li><a href="commission.php">Manage Commission</a></li>';
+    	}
     	?>
       
     </ul>

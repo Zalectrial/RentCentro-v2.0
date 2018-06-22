@@ -42,8 +42,9 @@ if(isset($_POST['query']) ){
                         <h3 class="panel-title">Search</h3>
                     </div>
                     <div class="panel-body">
-                        <form accept-charset="UTF-8" action="search_results.php" role="form" method='post'>
+                         
                         <fieldset>
+                        <form  action="search_results.php"  method='GET'> 
                             <div class="form-group">
                                 <input style="border-radius:5px;" class="form-control" placeholder="Search" name="query" type="text">
                             </div>
@@ -109,8 +110,9 @@ if(isset($_POST['query']) ){
                             
                             
                             <input class="btn btn-success btn-block btn-lg " type="submit" value="Search">
+                            </form>
                         </fieldset>
-                        </form>
+                        
                     </div>
                 </div>
             </div>

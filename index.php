@@ -29,8 +29,15 @@ $property=$obj->getProperty(1);
 				
 				<div id="postDiv">
 					<div class="jumbotron text-center">
+					<p>
+						Rent-centro is bridge between buyers and sellers of rental properties.
+					</p>
 						<h2><a href="propertyDetail.php?id=<?=$property["id"]?>">Featured Property</a></h2>
-						<center><img class="img img-responsive" src="assets/images/<?=$property["image"]?>" ></center><br>
+						<center>
+						<a href="propertyDetail.php?id=<?=$property["id"]?>">
+							<img class="img img-responsive" src="assets/images/<?=$property["image"]?>" >
+						</a>
+						</center><br>
 						<p> <i class="fa fa-hotel"></i> <i class="fa fa-bath"></i> <i class="fa fa-wifi"></i>   <?=$property["book_price"]?> $  </p>
 						<p><?=$property["description"]?></p> 
 					</div>
@@ -46,5 +53,19 @@ $property=$obj->getProperty(1);
 
 	<script type="text/javascript" src="assets/js/jquery.js"></script>
 	<script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+	<script>
+		$(document).ready(function(){
+			var alert ="<?= $_SESSION["alert"]?>";
+
+			if(alert=="true")
+			{
+				$('#myModal').modal('show');
+			}
+		});
+		
+		<?php
+		$_SESSION["alert"]="false";
+		?>
+	</script>
 </body>
 </html>

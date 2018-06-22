@@ -85,6 +85,18 @@ if(isset($_POST['street_no']) && isset($_POST['street_name'])&& isset($_POST['ci
                             </div>
 
                             <div class="form-group">
+                                <input class="form-control" placeholder="land size in Sq.ft" name="land" type="text" value="">
+                            </div>
+
+                            <div class="form-group">
+                                <input class="form-control" placeholder="Energy rating" name="energy" type="text" value="">
+                            </div>
+
+                            <div class="form-group">
+                                <input class="form-control" placeholder="building size in Sq.ft" name="building" type="text" value="">
+                            </div>
+
+                            <div class="form-group">
                                 <input class="form-control" name="pet" type="checkbox" value="1"> Pets Allowed
                             </div>
 
@@ -102,6 +114,10 @@ if(isset($_POST['street_no']) && isset($_POST['street_name'])&& isset($_POST['ci
                             
                             <div class="form-group">
                                 <input class="form-control" name="furn" type="checkbox" value="1"> Furnished
+                            </div>
+
+                            <div class="form-group">
+                                <input class="form-control" name="spa" type="checkbox" value="1"> Spa
                             </div>
 
                             

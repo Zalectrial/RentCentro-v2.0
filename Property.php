@@ -1,9 +1,9 @@
 <?php
 Class Property {
-	private $dbhost='localhost';
-	private $dbuser='root';
-	private $dbpassword='';
-	private $dbname='Rencentro';
+	private $dbhost='rentcentro.net';
+	private $dbuser='rcnet';
+	private $dbpassword='ict342@usc';
+	private $dbname='rcnet_assignment3';
 	private $con;
     //for uploading file
 	public $src = "./assets/images/";
@@ -36,6 +36,9 @@ Class Property {
 		if(password_verify($password, $data["password"])){
 			$_SESSION['email']=$email; // storing email in session data after authentication
 			$_SESSION['name']=$data["fname"]; // storing name in session data
+			$_SESSION['type']=$data["type"]; // storing usertype
+			$_SESSION['alert']="true";
+			$_SESSION['alert_message']="<i class='fa fa-check'></i> You are now connected !";
 			return true;
 		}else{
 			return false;
@@ -56,7 +59,10 @@ Class Property {
 		//for logging out user and destroying the current session
 		unset($_SESSION['email']);
 		unset($_SESSION['name']);
-		session_destroy();
+		unset($_SESSION['type']);
+		$_SESSION['alert']="true";
+		$_SESSION['alert_message']="<i class='fa fa-close'></i> You are now disconnected !";
+		
 	}
 
 
@@ -78,13 +84,7 @@ Class Property {
 		return $data;
 	}
 
-	public function deleteArticle($id){
-		// gor deleting saved articles
-		$query="DELETE FROM xml_article WHERE articleID=:id";
-		$q = $this->con->prepare($query);
-		$q->execute(array(':id'=>$id));
-		return true;
-	}
+
 
 	public function saveProperty(){
 		$street_no=$_REQUEST["street_no"];
@@ -97,12 +97,16 @@ Class Property {
 		$availablity=$_REQUEST["availablity"];
 		$bedroom=$_REQUEST["bed"];
 		$bathroom=$_REQUEST["bath"];
+		$buiilding=$_REQUEST["building"];
+		$land=$_REQUEST["land"];
 
 		$pet=0;
 		$net=0;
 		$furn=0;
 		$ac=0;
 		$swim=0;
+		$spa=0;
+		$energy=0;
 		if(isset($_REQUEST["pet"]))
 			$pet=$_REQUEST["pet"];
 		if(isset($_REQUEST["net"]))
@@ -116,13 +120,33 @@ Class Property {
 		
 		if(isset($_REQUEST["swim"]))
 		$swim=$_REQUEST["swim"];
+
+		if(isset($_REQUEST["spa"]))
+		$spa=$_REQUEST["spa"];
+
+		if(isset($_REQUEST["energy"]))
+		$energy=$_REQUEST["energy"];
+
 		$query = "INSERT INTO property SET street_no=:street_no,street_name=:street_name,description=:description,availablity=:availablity,postcode=:postcode,city=:city,book_price=:book,commission_rate=:comm,image=:image";
 		$q = $this->con->prepare($query);
 		$q->execute(array(':street_no'=>$street_no,':street_name'=>$street_name,
 		':description'=>$description,':availablity'=>$availablity,':postcode'=>$postcode,
 		':city'=>$city,':book'=>$book,':comm'=>$comm,':image'=>$this->startupload()
 		));
-		
+
+		$query = "SELECT * FROM property ORDER BY id DESC LIMIT 1";
+		$q = $this->con->prepare($query);
+		$q->execute();
+		$data = $q->fetch(PDO::FETCH_ASSOC);
+		$id=$data["id"];
+
+		$query = "INSERT INTO property_specs SET property_id=:property_id,bedroom=:bedroom,bathroom=:bathroom,pet_friendly=:pet_friendly,furnished=:furnished,air_condition=:air_condition,swimming_pool=:swimming_pool,spa=:spa,energy=:energy,internet=:internet,building_size=:building_size,land_size=:land_size";
+		$q = $this->con->prepare($query);
+		$q->execute(array(':property_id'=>$id,':bedroom'=>$bedroom,
+		':bathroom'=>$bathroom,':pet_friendly'=>$pet,':furnished'=>$furn,
+		':air_condition'=>$ac,':swimming_pool'=>$swim,':spa'=>$spa,':energy'=>$energy,':internet'=>$net,
+		':building_size'=>$buiilding,':land_size'=>$land
+		));
 		return true;
 	}
 
@@ -130,9 +154,9 @@ Class Property {
 	public function search(){
 		$query=$_REQUEST["query"];
 		
-		$query="SELECT * FROM property WHERE street_no LIKE '%$query%' OR street_name LIKE '%$query%' OR city LIKE '%$query%' OR postcode LIKE '%$query%' ";
+		$query="SELECT * FROM property p LEFT JOIN property_specs ps ON  ps.property_id=p.id WHERE street_no LIKE '%$query%' OR street_name LIKE '%$query%' OR city LIKE '%$query%' OR postcode LIKE '%$query%' ";
 
-		if(isset($_REQUEST["checkin"])){
+		if(isset($_REQUEST["checkin"]) && $_REQUEST["checkin"]!=""){
 			$date=$_REQUEST["checkin"];
 			$query+=" AND availablity=".$date;
 		}
@@ -141,6 +165,23 @@ Class Property {
 		$q->execute(array());
 		$data = $q->fetchAll(PDO::FETCH_ASSOC);
 		return $data;
+	}
+
+	public function getAllProperties()
+	{
+		$query="SELECT * FROM property ";
+		$q = $this->con->prepare($query);
+		$q->execute(array());
+		$data = $q->fetchAll(PDO::FETCH_ASSOC);
+		return $data;
+	}
+
+	public function updateCommission()
+	{
+		$params=array(':id'=>$_REQUEST["id"],':comm'=>$_REQUEST["commission"]);
+		$query = "UPDATE property SET commission_rate=:comm WHERE id=:id";
+		$q = $this->con->prepare($query);
+		return $q->execute($params) == true ? true : false;
 	}
 
 

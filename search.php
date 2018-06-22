@@ -42,7 +42,7 @@ if(isset($_POST['query']) ){
                         <h3 class="panel-title">Search</h3>
                     </div>
                     <div class="panel-body">
-                        <form accept-charset="UTF-8" action="search_results.php" role="form" method='post'>
+                        <form action="search_results.php" role="form" method='GET'>
                         <fieldset>
                             <div class="form-group">
                                 <input style="border-radius:5px;" class="form-control" placeholder="Search" name="query" type="text">
